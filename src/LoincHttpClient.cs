@@ -11,13 +11,15 @@ public class LoincHttpClient : HttpClient
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", BuildAuthenticationHeader());
     }
 
-    public async Task<string> CodeSystemLookup(string code)
+    public async Task<string> CodeSystemLookup(string code, params string[] properties)
     {
         try
         {
             string url = "https://fhir.loinc.org/CodeSystem/$lookup?system=http://loinc.org&code={0}";
+            for (int i=0; i<properties.Length; ++i)
+                url += string.Format("&&property={{{0}}}", i+1);
 
-            var response = await this.GetAsync(string.Format(url, code));
+            var response = await this.GetAsync(string.Format(url, code, properties));
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();

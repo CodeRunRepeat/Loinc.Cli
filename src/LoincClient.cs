@@ -1,16 +1,18 @@
+using System;
+using System.Threading.Tasks;
 using Hl7.Fhir.Serialization;
 
 namespace Loinc.Cli;
 public class LoincClient : IDisposable
 {
-    public async Task<Parameters> CodeSystemLookup(string code)
+    public async Task<Hl7.Fhir.Model.Parameters> CodeSystemLookup(string code, params string[] properties)
     {
         try
         {
-            string response = await httpClient.Value.CodeSystemLookup(code);
+            string response = await httpClient.Value.CodeSystemLookup(code, properties);
 
             var parser = new FhirJsonParser();
-            return parser.Parse<Parameters>(response);
+            return parser.Parse<Hl7.Fhir.Model.Parameters>(response);
         }
         catch (FormatException fex)
         {
