@@ -5,6 +5,19 @@ using Hl7.Fhir.Serialization;
 namespace Loinc.Cli;
 public class LoincClient : IDisposable
 {
+    public async Task<bool> Login(string username, string password)
+    {
+        try
+        {
+            httpClient.Value.SetAuthenticationCredentials(username, password);
+            string response = await httpClient.Value.CodeSystemProperties();
+            return true;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
     public async Task<Hl7.Fhir.Model.Parameters> CodeSystemLookup(string code, params string[] properties)
     {
         try

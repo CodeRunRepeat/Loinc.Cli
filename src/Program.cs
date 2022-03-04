@@ -9,11 +9,15 @@ public static class CommandLine
         try
         {
             DotNetEnv.Env.Load();
+            (new AuthTokenManager()).LoadAuthToken();
 
             RootCommand root = new RootCommand();
 
             CodeSystemCommand codeCommand = new CodeSystemCommand();
             root.AddCommand(codeCommand.CreateCommand());
+
+            LoginCommand loginCommand = new LoginCommand();
+            root.AddCommand(loginCommand.CreateCommand());
 
             await root.InvokeAsync(args);
         }

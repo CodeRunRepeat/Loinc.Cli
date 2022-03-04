@@ -3,13 +3,11 @@ using System.CommandLine;
 using Hl7.Fhir.Serialization;
 
 namespace Loinc.Cli;
-class CodeSystemCommand
+class CodeSystemCommand : LoincCommand
 {
-    public CodeSystemCommand()
+    public CodeSystemCommand() : base("code-system")
     {       
-        this.LoincCommand = new LoincCommand("code-system");
     }
-    private LoincCommand LoincCommand;
 
     public Command CreateCommand()
     {
@@ -18,7 +16,7 @@ class CodeSystemCommand
             new LoincCommand.OptionSettings() { OptionName = "--code", IsRequired = true },
             new LoincCommand.OptionSettings() { OptionName = "--verbose" },
         };
-        return this.LoincCommand.CreateCommand<string, bool>(CodeHandler, settings);
+        return this.CreateCommand<string, bool>(CodeHandler, settings);
     }
 
     private static async System.Threading.Tasks.Task CodeHandler(string code, bool verbose, LoincCommandParameters parameters)

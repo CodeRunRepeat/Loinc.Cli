@@ -1,3 +1,5 @@
+using System;
+
 namespace Loinc.Cli;
 
 class ResourceManager : System.Resources.ResourceManager
@@ -10,4 +12,6 @@ class ResourceManager : System.Resources.ResourceManager
         var resource = GetString(command + option);
         return resource ?? "";
     }
+
+    public static Lazy<ResourceManager> CommandsResources = new Lazy<ResourceManager>();
 }

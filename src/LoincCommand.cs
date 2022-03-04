@@ -17,8 +17,6 @@ class LoincCommand
     public TextWriter Out { get; set; }
     public TextWriter Error { get; set; }
 
-    static Lazy<ResourceManager> ResourceManager = new Lazy<ResourceManager>();
-
     public struct OptionSettings
     {
         public string OptionName;
@@ -31,7 +29,7 @@ class LoincCommand
     {
         EnsureOptions(2, optionSettings);
 
-        Command command = new Command(this.CommandName, ResourceManager.Value.GetDescription(this.CommandName));
+        Command command = new Command(this.CommandName, ResourceManager.CommandsResources.Value.GetDescription(this.CommandName));
 
         var options = new Option[] {
             CreateOption<T1>(optionSettings[0], this.CommandName),
@@ -47,7 +45,7 @@ class LoincCommand
 
     private Option<T> CreateOption<T>(OptionSettings settings, string commandName)
     {
-        var o = new Option<T>(settings.OptionName, ResourceManager.Value.GetDescription(commandName, settings.OptionName));
+        var o = new Option<T>(settings.OptionName, ResourceManager.CommandsResources.Value.GetDescription(commandName, settings.OptionName));
         if (settings.IsRequired)
             o.Arity = ArgumentArity.ExactlyOne;
         return o;
@@ -73,6 +71,10 @@ class LoincCommand
                     this.Error);
                     
                 await handler(parameter1, parameter2, parameters);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                this.Error.WriteLine("Invalid or missing credentials; run the login command with a valid user name and password. Visit https://loinc.org/join/ to create your credentials.");
             }
             catch (Exception ex)
             {

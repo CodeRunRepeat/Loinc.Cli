@@ -129,4 +129,8 @@
     <value>Show the entire JSON object instead of just the display name.</value>
     <comment/>
   </data>
-</root>
+  <data name="login" xml:space="preserve">
+    <value>Set the user name and password to use for subsequent operations.</value>
+    <comment/>
+  </data>
+  </root>
