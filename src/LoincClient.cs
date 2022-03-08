@@ -18,13 +18,19 @@ public class LoincClient : IDisposable
             return false;
         }
     }
+
+    public async Task<string> CodeSystemProperties()
+    {
+        return await httpClient.Value.CodeSystemProperties();
+    }
+
     public async Task<Hl7.Fhir.Model.Parameters> CodeSystemLookup(string code, params string[] properties)
     {
         try
         {
             string response = await httpClient.Value.CodeSystemLookup(code, properties);
 
-            var parser = new FhirJsonParser();
+            var parser = new FhirJsonParser(new ParserSettings() { AcceptUnknownMembers = true });
             return parser.Parse<Hl7.Fhir.Model.Parameters>(response);
         }
         catch (FormatException fex)

@@ -118,16 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="code-system--code" xml:space="preserve">
-    <value>The code for a LOINC term, Part, Answer List, or Answer string (required).</value>
+    <value>The code for a LOINC term, part, answer List, or answer string. Use to retrieve information or the parent for the item.</value>
     <comment/>
   </data>
   <data name="code-system" xml:space="preserve">
-    <value>Get info on an individual LOINC term, Part, Answer List, or Answer string; shows the display name by default.</value>
+    <value>Get the specialized properties available for LOINC as a CodeSystem or info on an individual LOINC term, part, answer List, or answer string; shows the display name by default.</value>
     <comment/>
   </data>
   <data name="code-system--verbose" xml:space="preserve">
-    <value>Show the entire JSON object instead of just the display name.</value>
+    <value>When retrieving the info for a code system item, show the entire JSON object instead of just the display name.</value>
     <comment/>
+  </data>
+  <data name="code-system--parent" xml:space="preserve">
+    <value>Use together with --code to retrieve the parent for a LOINC term or part.</value>
   </data>
   <data name="login" xml:space="preserve">
     <value>Set the user name and password to use for subsequent operations.</value>

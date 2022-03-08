@@ -29,16 +29,38 @@ class LoincCommand
     {
         EnsureOptions(2, optionSettings);
 
-        Command command = new Command(this.CommandName, ResourceManager.CommandsResources.Value.GetDescription(this.CommandName));
-
         var options = new Option[] {
             CreateOption<T1>(optionSettings[0], this.CommandName),
             CreateOption<T2>(optionSettings[1], this.CommandName),
         };
+
+        var command = BuildCommand(options);
+        command.SetHandler((T1 p1, T2 p2) => this.CommandHandler(p1, p2, handler), options);
+        return command;
+    }
+
+    public Command CreateCommand<T1, T2, T3>(
+        Func<T1, T2, T3, LoincCommandParameters, System.Threading.Tasks.Task> handler,
+        params OptionSettings[] optionSettings)
+    {
+        EnsureOptions(3, optionSettings);
+
+        var options = new Option[] {
+            CreateOption<T1>(optionSettings[0], this.CommandName),
+            CreateOption<T2>(optionSettings[1], this.CommandName),
+            CreateOption<T3>(optionSettings[2], this.CommandName),
+        };
+
+        var command = BuildCommand(options);
+        command.SetHandler((T1 p1, T2 p2, T3 p3) => this.CommandHandler(p1, p2, p3, handler), options);
+        return command;
+    }
+
+    Command BuildCommand(Option[] options)
+    {
+        Command command = new Command(this.CommandName, ResourceManager.CommandsResources.Value.GetDescription(this.CommandName));
         foreach (var option in options)
             command.AddOption(option);
-
-        command.SetHandler((T1 p1, T2 p2) => this.CommandHandler(p1, p2, handler), options);
 
         return command;
     }
@@ -71,6 +93,34 @@ class LoincCommand
                     this.Error);
                     
                 await handler(parameter1, parameter2, parameters);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                this.Error.WriteLine("Invalid or missing credentials; run the login command with a valid user name and password. Visit https://loinc.org/join/ to create your credentials.");
+            }
+            catch (Exception ex)
+            {
+                this.Error.WriteLine(ex.Message);
+            }
+        }
+    }
+
+    private async System.Threading.Tasks.Task CommandHandler<T1, T2, T3>(
+        T1 parameter1,
+        T2 parameter2,
+        T3 parameter3,
+        Func<T1, T2, T3, LoincCommandParameters, System.Threading.Tasks.Task> handler)
+    {
+        using (var client = new LoincClient())
+        {
+            try
+            {
+                LoincCommandParameters parameters = new LoincCommandParameters(
+                    client,
+                    this.Out,
+                    this.Error);
+                    
+                await handler(parameter1, parameter2, parameter3, parameters);
             }
             catch (UnauthorizedAccessException)
             {

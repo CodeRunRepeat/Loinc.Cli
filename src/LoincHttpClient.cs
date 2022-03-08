@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Linq;
 
 namespace Loinc.Cli;
 
@@ -38,7 +39,9 @@ public class LoincHttpClient : HttpClient
             for (int i=0; i<properties.Length; ++i)
                 url += string.Format("&&property={{{0}}}", i+1);
 
-            var response = await this.GetAsync(string.Format(url, code, properties));
+            properties = (new string[] { code }).Concat(properties).ToArray();
+
+            var response = await this.GetAsync(string.Format(url, properties));
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
