@@ -25,10 +25,10 @@ class LoginCommand : LoincCommand
             
         if (await parameters.LoincClient.Login(username, password))
         {
-            parameters.Out.WriteLine("Login succeeded.");
+            parameters.Out.WriteLine("Credentials verified, you can use them to set the environment variables. Type loinc-cli login --help for details.");
             (new AuthTokenManager()).SaveAuthToken(username, password);
         }
         else
-            parameters.Error.WriteLine("Login failed");
+            parameters.Error.WriteLine("Credential validation failed");
     }
 }

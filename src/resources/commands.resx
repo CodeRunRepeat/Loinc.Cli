@@ -133,7 +133,11 @@
     <value>Use together with --code to retrieve the parent for a LOINC term or part.</value>
   </data>
   <data name="login" xml:space="preserve">
-    <value>Set the user name and password to use for subsequent operations.</value>
+    <value>Validates a user name and password for loinc.org and the LOINC API. Visit https://loinc.org/join/ to sign up.
+To use a valid user name and password with the CLI, set your environment with:
+  LOINC_USER_NAME=&lt;your user name&gt;
+  LOINC_PASSWORD=&lt;your password&gt;
+    </value>
     <comment/>
   </data>
   </root>

@@ -27,15 +27,7 @@ class AuthTokenManager
     {
         try
         {
-            using (var stream = new FileStream(GetDataFileName(), FileMode.Create))
-            using (TextWriter writer = new StreamWriter(stream))
-            {
-                var contents = string.Format($"USER_NAME={username}\nPASSWORD={password}");
-                var bytes = System.Text.Encoding.ASCII.GetBytes(contents);
-                contents = System.Convert.ToBase64String(bytes);
-
-                writer.Write(contents);
-            }
+            throw new NotImplementedException("SaveAuthToken");
         }
         catch (IOException)
         {
