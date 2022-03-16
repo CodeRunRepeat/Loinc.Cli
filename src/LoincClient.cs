@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Hl7.Fhir.Serialization;
+using Hl7.Fhir.Model;
 
 namespace Loinc.Cli;
 public class LoincClient : IDisposable
@@ -24,14 +24,14 @@ public class LoincClient : IDisposable
         return await httpClient.Value.CodeSystemProperties();
     }
 
-    public async Task<Hl7.Fhir.Model.Parameters> CodeSystemLookup(string code, params string[] properties)
+    private async Task<Parameters> CodeSystemLookup(string code, params string[] properties)
     {
         try
         {
             string response = await httpClient.Value.CodeSystemLookup(code, properties);
 
-            var parser = new FhirJsonParser(new ParserSettings() { AcceptUnknownMembers = true });
-            return parser.Parse<Hl7.Fhir.Model.Parameters>(response);
+            var parser = new Hl7.Fhir.Serialization.FhirJsonParser();
+            return parser.Parse<Parameters>(response);
         }
         catch (FormatException fex)
         {
@@ -39,6 +39,36 @@ public class LoincClient : IDisposable
                 string.Format("Unexpected result content: {0}", fex.Message),
                 fex);
         }
+    }
+
+    public async Task<string> CodeSystemDisplay(string code)
+    {
+        var p = await CodeSystemLookup(code, "display");
+        var displayName = p.Parameter?.Find(c => c.Name == "display")?.Value;
+        return displayName?.ToString() ?? "";
+    }
+
+    public async Task<string> CodeSystemVerbose(string code)
+    {
+        var p = await CodeSystemLookup(code);
+        var serializer = new Hl7.Fhir.Serialization.FhirJsonSerializer(new Hl7.Fhir.Serialization.SerializerSettings() { Pretty = true });
+        return await serializer.SerializeToStringAsync(p);
+    }
+
+    public async Task<Hl7.Fhir.Model.Coding?> CodeSystemParent(string code)
+    {
+        var p = await CodeSystemLookup(code, "parent");
+
+        var parentProp = p.Parameter
+                    ?.Find(
+                        c => c.Name == "property" 
+                            && c.Part != null 
+                            && c.Part.Exists(cc => cc.Name == "code" && cc.Value.ToString() == "parent"))
+                    ?.Part
+                    ?.Find(cc => cc.Name == "value")
+                    ?.Value as Hl7.Fhir.Model.Coding;
+
+        return parentProp;
     }
 
     private Lazy<LoincHttpClient> httpClient = new Lazy<LoincHttpClient>();

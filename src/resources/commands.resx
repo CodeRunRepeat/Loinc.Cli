@@ -125,8 +125,12 @@
     <value>Get the specialized properties available for LOINC as a CodeSystem or info on an individual LOINC term, part, answer List, or answer string; shows the display name by default.</value>
     <comment/>
   </data>
-  <data name="code-system--verbose" xml:space="preserve">
-    <value>When retrieving the info for a code system item, show the entire JSON object instead of just the display name.</value>
+  <data name="code-system--action" xml:space="preserve">
+    <value>The action to perform on the requested code. Can be one of:
+- Display (default): show the display name for the code system item.
+- Verbose: show the entire data object for the code system item.
+- Parent: show the parent code, for items that have a parent.
+</value>
     <comment/>
   </data>
   <data name="code-system--parent" xml:space="preserve">
