@@ -1,7 +1,5 @@
 using System;
 using System.CommandLine;
-using System.Text.Json;
-using System.Linq;
 
 namespace Loinc.Cli;
 class CodeSystemCommand : LoincCommand
@@ -17,7 +15,7 @@ class CodeSystemCommand : LoincCommand
     {       
     }
 
-    public Command CreateCommand()
+    public override Command CreateCommand()
     {
         var settings = new LoincCommand.OptionSettings[] 
         {
@@ -35,11 +33,6 @@ class CodeSystemCommand : LoincCommand
             parameters.Out.WriteLine(properties);
             return;
         }
-
-        var queryProperties = 
-            action == CodeSystemAction.Parent ? new string[]{ "parent" } : 
-            action == CodeSystemAction.Verbose ? new string[0] : 
-            new string[]{ "display" };
 
         try
         {

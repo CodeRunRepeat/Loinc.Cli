@@ -2,7 +2,7 @@ using System;
 
 namespace Loinc.Cli;
 
-class ResourceManager : System.Resources.ResourceManager
+public class ResourceManager : System.Resources.ResourceManager
 {
     public ResourceManager() : base("Loinc.cli.resources.commands", System.Reflection.Assembly.GetExecutingAssembly())
     {

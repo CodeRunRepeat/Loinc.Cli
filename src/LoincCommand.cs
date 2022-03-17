@@ -4,7 +4,7 @@ using System.CommandLine;
 
 namespace Loinc.Cli;
 
-class LoincCommand
+abstract class LoincCommand
 {
     public LoincCommand(string commandName)
     {
@@ -23,7 +23,9 @@ class LoincCommand
         public bool IsRequired;
     }
 
-    public Command CreateCommand<T1, T2>(
+    public abstract Command CreateCommand();
+
+    protected Command CreateCommand<T1, T2>(
         Func<T1, T2, LoincCommandParameters, System.Threading.Tasks.Task> handler,
         params OptionSettings[] optionSettings)
     {
@@ -39,7 +41,7 @@ class LoincCommand
         return command;
     }
 
-    public Command CreateCommand<T1, T2, T3>(
+    protected Command CreateCommand<T1, T2, T3>(
         Func<T1, T2, T3, LoincCommandParameters, System.Threading.Tasks.Task> handler,
         params OptionSettings[] optionSettings)
     {

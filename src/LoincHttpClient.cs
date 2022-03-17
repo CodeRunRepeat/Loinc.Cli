@@ -65,8 +65,8 @@ public class LoincHttpClient : HttpClient
             hre);
     }
 
-    private const string UserNameVariable = "LOINC_USER_NAME";
-    private const string PasswordVariable = "LOINC_PASSWORD";
+    public const string UserNameVariable = "LOINC_USER_NAME";
+    public const string PasswordVariable = "LOINC_PASSWORD";
     public void SetAuthenticationCredentials(string username, string password)
     {
         System.Environment.SetEnvironmentVariable(UserNameVariable, username);

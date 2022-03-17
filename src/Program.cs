@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System;
 
 namespace Loinc.Cli;
 
@@ -9,15 +10,11 @@ public static class CommandLine
         try
         {
             DotNetEnv.Env.Load();
-            (new AuthTokenManager()).LoadAuthToken();
 
             RootCommand root = new RootCommand();
 
-            CodeSystemCommand codeCommand = new CodeSystemCommand();
-            root.AddCommand(codeCommand.CreateCommand());
-
-            LoginCommand loginCommand = new LoginCommand();
-            root.AddCommand(loginCommand.CreateCommand());
+            foreach (var command in CommandFactory.BuildCommandList())
+                root.AddCommand(command.CreateCommand());
 
             await root.InvokeAsync(args);
         }
