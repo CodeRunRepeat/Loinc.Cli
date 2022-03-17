@@ -20,6 +20,7 @@ jobs:
       env:
         LOINC_USER_NAME: ${{secrets.LOINC_USER_NAME}}
         LOINC_PASSWORD: ${{secrets.LOINC_PASSWORD}}
+        ENV: PIPELINE
     - name: Restore dependencies
       run: dotnet restore src; dotnet restore test
     - name: Build
