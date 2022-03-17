@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Hl7.Fhir.Model;
+using System.Linq;
 
 namespace Loinc.Cli;
 public class LoincClient : IDisposable
@@ -60,15 +61,30 @@ public class LoincClient : IDisposable
         var p = await CodeSystemLookup(code, "parent");
 
         var parentProp = p.Parameter
-                    ?.Find(
-                        c => c.Name == "property" 
-                            && c.Part != null 
-                            && c.Part.Exists(cc => cc.Name == "code" && cc.Value.ToString() == "parent"))
-                    ?.Part
-                    ?.Find(cc => cc.Name == "value")
-                    ?.Value as Hl7.Fhir.Model.Coding;
+            ?.Find(
+                c => c.Name == "property" 
+                    && c.Part != null 
+                    && c.Part.Exists(cc => cc.Name == "code" && cc.Value.ToString() == "parent"))
+            ?.Part
+            ?.Find(cc => cc.Name == "value")
+            ?.Value as Hl7.Fhir.Model.Coding;
 
         return parentProp;
+    }
+
+    public async Task<IEnumerable<Hl7.Fhir.Model.Coding?>> CodeSystemChildren(string code)
+    {
+        var p = await CodeSystemLookup(code, "child");
+
+        var children = p.Parameter
+            ?.FindAll(
+                c => c.Name == "property" 
+                     && c.Part != null 
+                     && c.Part.Exists(cc => cc.Name == "code" && cc.Value.ToString() == "child"))
+            ?.Select(
+                c => c.Part?.Find(cc => cc.Name == "value") ?.Value as Hl7.Fhir.Model.Coding);
+
+        return children ?? new Hl7.Fhir.Model.Coding?[0];
     }
 
     private Lazy<LoincHttpClient> httpClient = new Lazy<LoincHttpClient>();

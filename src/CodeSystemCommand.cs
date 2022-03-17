@@ -9,6 +9,7 @@ class CodeSystemCommand : LoincCommand
         Display,
         Verbose,
         Parent,
+        Child,
     }
 
     public CodeSystemCommand() : base("code-system")
@@ -36,25 +37,41 @@ class CodeSystemCommand : LoincCommand
 
         try
         {
-            if (action == CodeSystemAction.Display)
+            switch (action)
             {
+                case CodeSystemAction.Display:
                 var displayName = await parameters.LoincClient.CodeSystemDisplay(code);
                 parameters.Out.WriteLine(displayName);
-            }
-            else if (action == CodeSystemAction.Verbose)
-            {
-                var verbose = await parameters.LoincClient.CodeSystemVerbose(code);
-                parameters.Out.WriteLine(verbose);
-            }
-            else if (action == CodeSystemAction.Parent)
-            {
-                var parentProp = await parameters.LoincClient.CodeSystemParent(code);
+                break;
 
-                var parentCode = parentProp?.Code;
-                var parentDisplay = parentProp?.Display;
+                case CodeSystemAction.Verbose:
+                    var verbose = await parameters.LoincClient.CodeSystemVerbose(code);
+                    parameters.Out.WriteLine(verbose);
+                    break;
 
-                parameters.Out.WriteLine($"{parentCode} ({parentDisplay})");
-            }           
+                case CodeSystemAction.Parent:
+                    var parentProp = await parameters.LoincClient.CodeSystemParent(code);
+
+                    var parentCode = parentProp?.Code;
+                    var parentDisplay = parentProp?.Display;
+
+                    parameters.Out.WriteLine($"{parentCode} ({parentDisplay})");
+                    break;
+
+                case CodeSystemAction.Child:
+                    var children = await parameters.LoincClient.CodeSystemChildren(code);
+                    if (children == null)
+                        throw new InvalidOperationException();
+
+                    foreach (var child in children)
+                    {
+                        parameters.Out.WriteLine($"{child?.Code} ({child?.Display})");
+                    }
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
         catch (InvalidOperationException)
         {

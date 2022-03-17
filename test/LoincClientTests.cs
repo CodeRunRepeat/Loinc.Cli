@@ -58,4 +58,14 @@ public class LoincClientTests
         Assert.IsNotNull(response.Result);
         Assert.AreEqual(response.Result?.Code, "LP7846-1");
     }
+
+    [Test]
+    public void TestCodeSystemChildren()
+    {
+        var response = client.CodeSystemChildren("LP203649-1");
+        Task.WaitAll(response);
+        Assert.IsNotNull(response.Result);
+        foreach (var child in response.Result)
+            Assert.IsNotNull(child?.Code);
+    }
 }
