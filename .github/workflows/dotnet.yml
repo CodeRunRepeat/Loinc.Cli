@@ -17,6 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+      env:
+        LOINC_USER_NAME: ${{secrets.LOINC_USER_NAME}}
+        LOINC_PASSWORD: ${{secrets.LOINC_PASSWORD}}
     - name: Restore dependencies
       run: dotnet restore src; dotnet restore test
     - name: Build
