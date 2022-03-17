@@ -1,3 +1,5 @@
+[![.NET](https://github.com/CodeRunRepeat/Loinc.Cli/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/CodeRunRepeat/Loinc.Cli/actions/workflows/dotnet.yml)
+
 # What is Loinc.Cli?
 
 Loinc.Cli is a command line tool to access and use the [LOINC FHIR Terminology Server](https://loinc.org/fhir/) published
