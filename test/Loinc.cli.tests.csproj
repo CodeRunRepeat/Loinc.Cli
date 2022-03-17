@@ -23,7 +23,7 @@
     <Using Include="Loinc.Cli" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(ENV)' != 'PIPELINE'">
     <None Include=".env">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
