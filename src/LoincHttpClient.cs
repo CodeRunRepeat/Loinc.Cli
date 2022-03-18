@@ -14,7 +14,27 @@ public class LoincHttpClient : HttpClient
 
     private const string BaseUrl =  "https://fhir.loinc.org/";
     private const string CodeSystemUrl = BaseUrl + "CodeSystem/";
+    private const string ValueSetUrl = BaseUrl + "ValueSet/";
 
+    public async Task<string> ValueSetGet(string code, bool expand)
+    {
+        try
+        {
+            string url = string.Format(ValueSetUrl + "{0}?url=http://loinc.org/vs/{1}",
+                expand ? "$expand" : "",
+                code);
+
+            var response = await this.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsStringAsync();
+        }
+        catch (HttpRequestException hre)
+        {
+            ExceptionHandler(hre, "ValueSet query");
+            return "";
+        }
+    }
     public async Task<string> CodeSystemProperties()
     {
         try
@@ -61,7 +81,7 @@ public class LoincHttpClient : HttpClient
         }
 
         throw new System.Exception(
-            string.Format("{1}} failed: {0}", hre.Message, operation), 
+            string.Format("{1} failed: {0}", hre.Message, operation), 
             hre);
     }
 

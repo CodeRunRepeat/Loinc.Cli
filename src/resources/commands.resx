@@ -121,6 +121,19 @@
     <value>The code for a LOINC term, part, answer List, or answer string. Use to retrieve information or the parent for the item.</value>
     <comment/>
   </data>
+  <data name="value-set" xml:space="preserve">
+    <value>Get the definition or terms in a ValueSet.</value>
+    <comment/>
+  </data>
+  <data name="value-set--code" xml:space="preserve">
+    <value>The code for the ValueSet to get information for.</value>
+    <comment/>
+  </data>
+  <data name="value-set--action" xml:space="preserve">
+    <value>The action to perform on the requested code. Can be one of:
+- Expand (default): display the values in this set.
+- Verbose: show the complete metadata for the value set.</value>
+  </data>
   <data name="code-system" xml:space="preserve">
     <value>Get the specialized properties available for LOINC as a CodeSystem or info on an individual LOINC term, part, answer List, or answer string; shows the display name by default.</value>
     <comment/>
@@ -130,6 +143,7 @@
 - Display (default): show the display name for the code system item.
 - Verbose: show the entire data object for the code system item.
 - Parent: show the parent code, for items that have a parent.
+- Child: show the list of children for this item, if available.
 </value>
     <comment/>
   </data>

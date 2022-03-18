@@ -24,6 +24,7 @@ class CommandFactory
     static IEnumerable<Type> GetCommandTypes()
     {
         yield return typeof(CodeSystemCommand);
+        yield return typeof(ValueSetCommand);
         yield return typeof(LoginCommand);
     }
 } 

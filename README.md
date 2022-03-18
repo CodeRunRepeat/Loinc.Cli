@@ -24,3 +24,8 @@ To connect to the LOINC server, you need credentials for loinc.org; you can sign
 LOINC_USER_NAME=<username>
 LOINC_PASSWORD=<password>
 ```
+
+## Running tests
+
+Tests are in the /test directory and require setting up the same environment variables. The project references an
+.env file that you will have to create yourself and add the environment variables above.

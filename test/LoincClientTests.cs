@@ -35,6 +35,17 @@ public class LoincClientTests
     }
 
     [Test]
+    public void TestCodeSystemNotFound()
+    {
+        Assert.ThrowsAsync(
+            typeof(System.Exception), 
+            async () => 
+                {
+                    var response = await client.CodeSystemDisplay("test");
+                });
+    }
+
+    [Test]
     public void TestCodeSystemDisplay()
     {
         var response = client.CodeSystemDisplay("4544-3");
@@ -63,6 +74,36 @@ public class LoincClientTests
     public void TestCodeSystemChildren()
     {
         var response = client.CodeSystemChildren("LP203649-1");
+        Task.WaitAll(response);
+        Assert.IsNotNull(response.Result);
+        foreach (var child in response.Result)
+            Assert.IsNotNull(child?.Code);
+    }
+
+    [Test]
+    public void TestValueSetNotFound()
+    {
+        Assert.ThrowsAsync(
+            typeof(System.Exception), 
+            async () => 
+                {
+                    var response = await client.ValueSetExpand("test");
+                });
+    }
+
+    [Test]
+    public void TestValueSetGet()
+    {
+        var response = client.ValueSetGet("LL1162-8");
+        Task.WaitAll(response);
+        Assert.IsNotNull(response.Result);
+        Assert.IsTrue(response.Result.IndexOf("Quantity (5 answers, ord)") >= 0);
+    }
+
+    [Test]
+    public void TestValueSetExpand()
+    {
+        var response = client.ValueSetExpand("LL1162-8");
         Task.WaitAll(response);
         Assert.IsNotNull(response.Result);
         foreach (var child in response.Result)

@@ -20,6 +20,40 @@ public class LoincClient : IDisposable
         }
     }
 
+    public async Task<string> ValueSetGet(string code)
+    {
+        try
+        {
+            var response = await httpClient.Value.ValueSetGet(code, false);
+            return response;
+        }
+        catch (FormatException fex)
+        {
+            throw new System.Exception(
+                string.Format("Unexpected result content: {0}", fex.Message),
+                fex);
+        }
+    }
+
+    public async Task<IEnumerable<ValueSet.ContainsComponent>> ValueSetExpand(string code)
+    {
+        try
+        {
+            var response = await httpClient.Value.ValueSetGet(code, true);
+            
+            var parser = new Hl7.Fhir.Serialization.FhirJsonParser();
+            var valueSet = parser.Parse<ValueSet>(response);
+
+            return valueSet.Expansion.Children.OfType<ValueSet.ContainsComponent>();
+        }
+        catch (FormatException fex)
+        {
+            throw new System.Exception(
+                string.Format("Unexpected result content: {0}", fex.Message),
+                fex);
+        }
+    }
+
     public async Task<string> CodeSystemProperties()
     {
         return await httpClient.Value.CodeSystemProperties();
